@@ -1,0 +1,14 @@
+number of matrix elements: 16
+number of rows: 4
+number of cols: 4
+sum of main diag elements: 0.155316421078121
+sum of middle row elements: -0.983096875048624
+sum of middle cloumn elements: -0.983096875048624
+row sums: 0.450759805772574
+row sums: -0.983096875048624
+row sums: 1.00507928362716
+row sums: -0.479166911502854
+col sums: 0.450759805772574
+col sums: -0.983096875048624
+col sums: 1.00507928362716
+col sums: -0.479166911502854

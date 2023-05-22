@@ -1,0 +1,9 @@
+number of matrix elements: 2
+number of rows: 2
+number of cols: 1
+sum of main diag elements: 0.843853958732492
+sum of middle row elements: 0.843853958732492
+sum of middle cloumn elements: 1.50417066697657
+row sums: 0.843853958732492
+row sums: 0.66031670824408
+col sums: 1.50417066697657
