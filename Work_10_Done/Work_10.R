@@ -1,246 +1,218 @@
 # url <- "https://raw.githubusercontent.com/allatambov/R-programming-3/master/seminars/sem8-09-02/demography.csv"
-# destfile <- "C:/Users/Sinsjar/Desktop/R_projects/Work_10"
+# destfile <- "C:\Users\Sinsjar\Desktop\R_projects\Work_10_Rebuild"
 # download.file(url, destfile="demography.csv", mode="wb")
 
-#db <- read.csv("demography.csv")
+# if ("ggplot2" %in% rownames(installed.packages()) == FALSE) {
+#   install.packages("ggplot2")
+# }
+
+
+db <- read.csv("demography.csv")
 
 #View(db)
 
-# region: название региона;
-# district: название района;
-# empl_total: численность занятого населения;
-# А-O: занятость по отраслям (как на сайте Росстата: сельское хозяйство);
-# popul_total: численность населения;
-# urban _total: численность городского населения;
-# rural_total: численность сельского населения;
-# wa_total: численность трудоспособного населения;
-# wa_female: численность трудоспособного населения (женский пол); 
-# wa_male: численность трудоспособного населения (мужской пол);
-
-# ret_total: численность пенсионеров;
-# ret_female: численность пенсионеров (женский пол); 
-# ret_male: численность пенсионеров (мужской пол); 
-# young_total: численность населения, моложе трудоспособного возраста; 
-# young_ female: численность населения, моложе трудоспособного возраста ( женский пол); 
-# young_ male: численность населения, моложе трудоспособного возраста (мужской пол); 
-# Х18_19 - X70_plus: численность населения по возрастным группам. 
-
 # Zadanie_2 ---------------------------------------------------------------
 
-# wa_total: численность трудоспособного населения;
-# ret_ total: численность пенсионеров;
-# young_total: численность населения, моложе трудоспособного возраста; 
-
-
 # доля населения возраста моложе трудоспособного
-#young_share <- sum((db$young_total / (db$young_total + db$wa_total + db$ret_total)))
+young_share <-(db$young_total / (db$young_total + db$wa_total + db$ret_total))
+
 
 # доля населения трудоспособного возраста
-#trud_share <- sum((db$wa_total / (db$young_total + db$wa_total + db$ret_total)))
+trud_share <- ((db$wa_total / (db$young_total + db$wa_total + db$ret_total)))
 
 # доля населения возраста, старше трудоспособного
-#old_share <- sum((db$ret_total / (db$young_total + db$wa_total + db$ret_total)))
+old_share <- ((db$ret_total / (db$young_total + db$wa_total + db$ret_total)))
 
-#cat("Доля населения моложе трудоспособного возраста: ", young_share, "%\n")
-#cat("Доля населения трудоспособного возраста: ", trud_share, "%\n")
-#cat("Доля населения старше трудоспособного возраста: ", old_share, "%\n")
+cat("Доля населения моложе трудоспособного возраста: ", young_share, "%\n")
+cat("Доля населения трудоспособного возраста: ", trud_share, "%\n")
+cat("Доля населения старше трудоспособного возраста: ", old_share, "%\n")
 
 
 # Zadanie_3 ---------------------------------------------------------------
 
-# library(dplyr)
-# 
-# median_value <- median(trud_share)
-# 
-# hist(trud_share,
-#      col= "blue",
-#      xlab= "Трудоспособное население",
-#      ylab= "Частота",
-#      main= "Гистограмма населения трудоспособного возраста",
-#      breaks= seq(0, 100, by= 10),
-#      ylim= c(0, 10))
-# 
-# rug(trud_share, col = "red")
-# abline(v= median_value, col= "green")
+ggplot(demography, aes(x = trud_share)) +
+  geom_histogram(color = "black", fill = "skyblue", 
+                 alpha = 0.7, bins = 10) +
+  geom_rug() +
+  geom_vline(xintercept = median(demography$trud_share), 
+             color = "red", linetype = "dashed") +
+  labs(title = "Доля трудоспособного населения в процентах",
+       x = "Доля трудоспособного населения",
+       y = "Частота") +
+  theme_minimal()
 
 
 # Zadanie_4 ---------------------------------------------------------------
 
-# library('ggplot2')
-# ggplot(fortify(db), aes(x=trud_share, fill=region)) + 
-#   geom_density(alpha=0.5) + 
-#   scale_fill_manual(values=c("#00AFBB", "#E7B800", "#FC4E07", "#00BFC4")) +
-#   labs(x="Доля трудоспособного населения, %", y="Плотность") + 
-#   ggtitle("Сглаженная гистограмма распределения доли трудоспособного населения по регионам") +
-#   facet_wrap(~ region, ncol=2)
-# 
-# # Скрипичная диаграмма
-# library('ggplot2')
-# ggplot(fortify(db), aes(x=region, y=trud_share, fill=region)) +
-#   geom_violin() +
-#   scale_fill_manual(values=c("#00AFBB", "#E7B800", "#FC4E07", "#00BFC4")) +
-#   labs(x="Регион", y="Доля трудоспособного населения, %") +
-#   ggtitle("Распределение доли трудоспособного населения по регионам") +
-#   facet_wrap(~ region, ncol=2)
+library('ggplot2')
+ggplot(fortify(db), aes(x=trud_share, fill=region)) +
+  geom_density(alpha=0.5) +
+  scale_fill_manual(values=c("#00AFBB", "#E7B800", "#FC4E07", "#00BFC4")) +
+  labs(x="Доля трудоспособного населения, %", y="Плотность") +
+  ggtitle("Сглаженная гистограмма распределения доли трудоспособного населения по регионам") +
+  facet_wrap(~ region, ncol=2)
 
-
+# Скрипичная диаграмма
+library('ggplot2')
+ggplot(fortify(db), aes(x=region, y=trud_share, fill=region)) +
+  geom_violin(alpha = 0.5) +
+  scale_fill_manual(values=c("#00AFBB", "#E7B800", "#FC4E07", "#00BFC4")) +
+  labs(x="Регион", y="Доля трудоспособного населения, %") +
+  ggtitle("Распределение доли трудоспособного населения по регионам") +
+  theme_minimal()
 
 # Zadanie_5 ---------------------------------------------------------------
 
-# library(ggplot2)
-# library(ggpubr)
-# 
-# ggplot(db, aes(x=young_share, y=old_share)) +
-#   geom_point(color='black') +
-#   labs(title='Scatter Plot of Young Share and Old Share', x='Young_Share', y='Old_Share')
+library(ggplot2)
+library(ggpubr)
 
-#Корреляция - меняется
-# ggplot(db, aes(x = young_share, y = old_share)) +
-#   geom_point(color = 'blue') +
-#   stat_cor(method = "pearson", label.x = 50, label.y = 50) +
-#   labs(title = 'Scatter Plot of Young Share and Old Share', x = 'Young_Share', y = 'Old_Share')
+ggplot(db, aes(x=young_share, y=old_share)) +
+  geom_point(color='black', shape = 11, size= 4) +
+  labs(title='Плотность распределения доли трудоспособности населения в %',
+       x = 'Доля трудоспособного населения',
+       y = 'Плотность') +
+  theme_minimal()
 
-#чем больше процент молодого
-# населения (моложе трудоспособного населения), тем больше процент
-# пожилых людей
+
+# Рассеяние
+ggplot(data = db, aes(x = young_share, y= old_share)) +
+  geom_point(color = "red", shape = 25, size = 5) + theme_bw() +
+  labs(x= "Процент населения моложе трудоспособного",
+       y= "Процент населения старше трудоспособного")
 
 
 # Zadanie_6 ---------------------------------------------------------------
 
-#доля мужского населения в районе / городе
-#male_share <- sum(na.omit(db$wa_total / db$popul_total))
-#cat(male_share, "%")
 
-# доля мужчин в муниципальном
-#woman_dol <- sum(db$wa_female / db$popul_total)
-
-#cat(woman_dol, "%")
-
-#ifelse(male_share > woman_dol, 1, 0) -> male
-#print(male)
+female <- db$young_female + db$wa_female + db$ret_female
+male <- db$young_male + db$wa_male + db$ret_male
+female_share <- female / db$popul_total * 100
+male_share <- male / db$popul_total * 100
+cat(male_share)
+ifelse(male_share > female_share, 1, 0) -> Male
+print(Male)
 
 
 # Zadanie_7 ---------------------------------------------------------------
 
-# ggplot(db, aes(x= young_share, y= old_share, size= male_share, color= male)) +
-#   geom_point(alpha= 0.7) + 
-#   scale_size(range= c(10, 20)) +
-#   labs(x= "Доля молодых", y= "Доля пожилых", size= "Доля мужчин", 
-#        color= "Преобладание мужчин") + 
-#   theme_bw()
+ggplot(db, aes(x= young_share, y= old_share)) +
+  geom_point(aes(size = male_share, color = Male)) +
+  labs(x= "Доля молодых", y= "Доля пожилых", size= "Доля мужчин",
+       color= "Преобладание мужчин")
 
 
+library(ggplot2)
 
-# district_counts <- db %>%
-#   group_by(region) %>%
-#   summarise(num_districts = n_distinct(district))
-# 
-# print(district_counts)
-# 
-# library(ggplot2)
-# 
-# ggplot(data=district_counts, aes(x=region, y=num_districts, fill=region)) +
-#   geom_bar(stat="identity") +
-#   labs(title="Количество районов в разбивке по регионам",
-#        x="Регион", y="Количество районов")
 
+ggplot(db, aes(x = region)) +
+  scale_y_continuous(breaks = seq(0, 30, by = 5)) +
+  geom_bar(fill= "pink", color= "black") +
+  labs(x= "Регион", y= "Количество")
 
 
 
 # Part_2 ------------------------------------------------------------------
-# library(ggplot2)
-# 
-# data(mtcars)
-# 
-# mtcars$am <- factor(mtcars$am, labels = c("Automatic", "Manual"))
-# 
-# ggplot(mtcars, aes(x = wt, y = hp, color = am, size = cyl)) +
-#   geom_point(alpha = 0.7) +
-#   scale_color_manual(values = c("green", "red")) +
-#   labs(title = "Relationship between Gross horsepower (hp), Weight (wt), number of cylinders and transmission type",
-#        x = "Weight (1000 lbs)",
-#        y = "Gross horsepower (hp)",
-#        color = "Transmission type",
-#        size = "Number of cylinders")
+library(ggplot2)
+
+ggplot(data = mtcars, aes(x = hp, y = wt)) +
+  geom_point(aes(size = cyl, color = as.factor(am))) +
+  labs(title = "Характеристики автомобилей", 
+       x = "Число лошадиных сил", 
+       y = "Вес", 
+       color = "Коробка передач", 
+       size = "Число цилиндров") +
+  scale_color_manual(values = c("green", "red"),                    
+                     labels = c("Автомат", "Механика"))
 
 
 
 # Zadanie_2 ---------------------------------------------------------------
-# library(ggplot2)
-# 
-# data <- mtcars
-# 
-# # Первый график (автоматическая коробка передач)
-# ggplot(subset(data, am==0), aes(x=hp, fill=factor(cyl))) +
-#   geom_histogram(binwidth=20, position='dodge') +
-#   scale_x_continuous(limits=c(100, 300)) +
-#   labs(x="Horse power", y="Count", fill="Cylinders") +
-#   ggtitle("Automatic transmission")
-# 
-# ggplot(subset(data, am==1), aes(x=hp, fill=factor(cyl))) +
-#   geom_histogram(binwidth=20, position='dodge') +
-#   scale_x_continuous(limits=c(100, 300)) +
-#   labs(x="Horse power", y="Count", fill="Cylinders") +
-#   ggtitle("Manual transmission")
+library(ggplot2)
 
+data <- mtcars
 
+# Первый график (автоматическая коробка передач)
+ggplot(data = mtcars, aes(x = hp)) + 
+  geom_histogram(fill = "brown", 
+                 color = "black", 
+                 bins = 6) +  
+  labs(title = "Gross horsepower", 
+       x = "Horsepower", 
+       y = "count") + 
+  theme_bw() + 
+  facet_grid(~am,
+             labeller = labeller(am = c("0" = "Automatic", 
+                                        "1" = "Mechanic")))
 
 # Zadanie_3 ---------------------------------------------------------------
 
-# library(ggplot2)
-# 
-# data(sleep)
-# 
-# ggplot(sleep, aes(x="", y=extra, fill=factor(group))) +
-#   geom_boxplot()+
-#   labs(x="", y="Extra hours of sleep",
-#        title="Boxplot of extra sleep hours by group") +
-#   scale_fill_manual(values=c("skyblue", "orange"))
+library(ggplot2)
+
+data(sleep)
+
+ggplot(sleep, aes(x="", y=extra, fill=group)) +
+  geom_boxplot()+
+  labs(x= "Groups", y= "Extra hours of sleep",
+       title="Boxplot of extra sleep hours by group") +
+  scale_fill_manual(values=c("skyblue", "orange"))
 
 
 
 # Part_3 ------------------------------------------------------------------
 
 # url <- "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-# destfile <- "C:/Users/Sinsjar/Desktop/R_projects/Work_10"
+# destfile <- "C:/Users/Sinsjar/Desktop/R_projects/Work_10_New"
 # download.file(url, destfile="COVID_PIZDA_VSEM.csv", mode="wb")
 
-
+library(dplyr)
 library(ggplot2)
+library(tidyr)
 
-covid_data <- read.csv("COVID_PIZDA_VSEM.csv")
-View(covid_data)
+df<- read.csv("COVID_PIZDA_VSEM.csv")
 
-#geom_ploy
+colnames(df)[1:4] <- c("Регион", "Страна", "Широта", "Долгота")
 
-ggplot(covid_data, mapping = aes(x = rownames(covid_data),y = "Russia"))+
-  geom_point(col='yellow', size=5)+
-  labs(x='Время с начала пандемии', title = 'Динамика роста заболеваемости в России', subtitle = paste("Данные от", min(rownames(covid_data))))
+df <- unite(df, "Страна/Регион", c("Регион","Страна"))
 
-ggplot(covid_data, mapping = aes(x = rownames(covid_data),y = "Austria"))+
-  geom_point(col='orange', size=5)+
-  labs(x='Время с начала пандемии', title = 'Динамика роста заболеваемости в России', subtitle = paste("Данные от", min(rownames(covid_data))))
+date <- colnames(df[4:ncol(df)])
+date <- gsub("X", "", date)
+month <- stringr::str_extract(date, "(\\d{1,2})")
+day <- stringr::str_extract(date, "(\\d{1,2})+\\.(\\d{1,2})", group=2)
+year <- stringr::str_extract(date, "(\\d{1,2})+\\.(\\d{1,2})+\\.(\\d{2})", group=3)
+month <- as.integer(month)
+day <- as.integer(day)
+year <- paste("20", year, sep = "")
+year <- as.integer(year)
 
-ggplot(covid_data, mapping = aes(x = rownames(covid_data),y = "Netherlands"))+
-  geom_point(col='blue', size=5)+
-  labs(x='Время с начала пандемии', title = 'Динамика роста заболеваемости в России', subtitle = paste("Данные от", min(rownames(covid_data))))
+date <- as.Date(ISOdate(year, month, day))
 
+df <- as.data.frame(t(data.frame(df[1:nrow(df), 4:ncol(df)],
+                                 row.names = df[1:nrow(df[1]), 1])))
+row.names(df) <- NULL
+df$"Дата" <- date
+df <- df %>%
+  relocate("Дата")
 
-#plotting hist 
-ggplot(covid_data, mapping = aes(x = "Russia")) +
-  geom_histogram(stat = "count", bins = 15, color = "red", fill = "skyblue") +
-  geom_density(fill = "blue", alpha = 0.2) +
-  labs(x = 'Замбия', y = 'Плотность')
+View(df)
 
-ggplot(covid_data, mapping = aes(x = "Zambia")) +
-  geom_histogram(stat = "count", bins = 15, color = "red", fill = "pink") +
-  geom_density(fill = "blue", alpha = 0.2) +
-  labs(x = 'Замбия', y = 'Плотность')
+ggplot(df, mapping = aes(x=1:nrow(df), y = df$'_Antarctica')) +
+  geom_point() +
+  labs(title = "Статистика COVID-19 Antarctica",
+       x = "Дни",
+       y = "Количество заболевших") +
+  theme_minimal()
 
+ggplot(df, mapping = aes(x=1:nrow(df), y = df$'_Albania')) +
+  geom_point() +
+  labs(title = "Статистика COVID-19 Albania",
+       x = "Дни",
+       y = "Количество заболевших") +
+  theme_minimal()
 
-ggplot(covid_data, mapping = aes(x = "France")) +
-  geom_histogram(stat = "count", bins = 15, color = "red", fill = "grey") +
-  geom_density(fill = "grey", alpha = 0.2) +
-  labs(x = 'Франция', y = 'Плотность')
-
+ggplot(df, mapping = aes(x=1:nrow(df), y = df$'_Armenia')) +
+  geom_point() +
+  labs(title = "Статистика COVID-19 Armenia",
+       x = "Дни",
+       y = "Количество заболевших") +
+  theme_minimal()
 
