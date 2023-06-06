@@ -1,5 +1,5 @@
 # url <- "https://raw.githubusercontent.com/allatambov/R-programming-3/master/seminars/sem8-09-02/demography.csv"
-# destfile <- "C:\Users\Sinsjar\Desktop\R_projects\Work_10_Rebuild"
+# destfile <- "C:/Users/Sinsjar/Desktop/R_projects/Work_10_New"
 # download.file(url, destfile="demography.csv", mode="wb")
 
 # if ("ggplot2" %in% rownames(installed.packages()) == FALSE) {
@@ -30,11 +30,11 @@ cat("Доля населения старше трудоспособного в�
 
 # Zadanie_3 ---------------------------------------------------------------
 
-ggplot(demography, aes(x = trud_share)) +
+ggplot(db, aes(x = trud_share)) +
   geom_histogram(color = "black", fill = "skyblue", 
                  alpha = 0.7, bins = 10) +
   geom_rug() +
-  geom_vline(xintercept = median(demography$trud_share), 
+  geom_vline(xintercept = median(trud_share), 
              color = "red", linetype = "dashed") +
   labs(title = "Доля трудоспособного населения в процентах",
        x = "Доля трудоспособного населения",
